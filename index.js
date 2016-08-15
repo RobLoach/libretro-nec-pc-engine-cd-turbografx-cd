@@ -30,16 +30,21 @@ async.map(files, processXml, function (err, results) {
 	var games = {}
 	for (var i in results) {
 		for (var game in results[i]) {
-			games[game] = results[i][game]
+			var gameName = game
+			while (gameName in games) {
+				gameName = gameName + ' '
+			}
+			games[gameName] = results[i][game]
 		}
 	}
 
 	// Loop through the sorted games database, and output the rom.
 	for (var game in sort(games)) {
 		var rom = games[game]
+		var gameName = game.trim()
 		output += `\ngame (
-	name "${game}"
-	description "${game}"
+	name "${gameName}"
+	description "${gameName}"
 	rom ( name "${rom.name}" size ${rom.size} crc ${rom.crc} md5 ${rom.md5} sha1 ${rom.sha1} )
 )\n`
 	}
